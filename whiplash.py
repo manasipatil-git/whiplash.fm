@@ -70,11 +70,10 @@ scope = "user-read-playback-state user-modify-playback-state user-read-currently
 
 @st.cache_resource
 def get_spotify_client():
-    return spotipy.Spotify(auth_manager=SpotifyOAuth(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        redirect_uri=REDIRECT_URI,
-        scope=scope))
+    return from spotipy.oauth2 import SpotifyClientCredentials
+
+spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET))
+
 
 @st.cache_data
 def search_playlists(_sp, mood):
