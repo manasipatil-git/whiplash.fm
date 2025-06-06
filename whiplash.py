@@ -6,7 +6,7 @@ import re
 from collections import Counter
 from textblob import TextBlob
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
 import streamlit as st
 
 # --- Mood detection logic ---
@@ -57,20 +57,11 @@ def detect_mood(text):
 
     mood_counts = Counter(detected)
     sorted_moods = [f"{mood} ({count})" if count > 1 else mood for mood, count in mood_counts.most_common()]
-
     return sorted_moods
 
 # --- Spotify setup ---
-import os
 CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
-REDIRECT_URI = 'http://127.0.0.1:8501/callback'
-
-scope = "user-read-playback-state user-modify-playback-state user-read-currently-playing user-library-read"
-
-@st.cache_resource
-def get_spotify_client():
-from spotipy.oauth2 import SpotifyClientCredentials
 
 @st.cache_resource
 def get_spotify_client():
@@ -79,7 +70,6 @@ def get_spotify_client():
         client_secret=CLIENT_SECRET
     )
     return spotipy.Spotify(auth_manager=client_credentials_manager)
-
 
 @st.cache_data
 def search_playlists(_sp, mood):
@@ -133,7 +123,7 @@ if user_input:
     detected_moods = detect_mood(user_input)
     top_mood = detected_moods[0] if detected_moods else "Neutral"
 
-    # 💥 Mood bubble
+    # Mood bubble
     st.markdown(f"""
         <div style='
             margin-top: 20px;
@@ -150,7 +140,7 @@ if user_input:
         </div>
     """, unsafe_allow_html=True)
 
-    # 🎵 Playlist section
+    # Playlist section
     sp = get_spotify_client()
     playlists = search_playlists(sp, top_mood)
     playlist_items = playlists.get('playlists', {}).get('items', []) or []
