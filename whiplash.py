@@ -70,9 +70,15 @@ scope = "user-read-playback-state user-modify-playback-state user-read-currently
 
 @st.cache_resource
 def get_spotify_client():
-    return from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials
 
-spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET))
+@st.cache_resource
+def get_spotify_client():
+    client_credentials_manager = SpotifyClientCredentials(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET
+    )
+    return spotipy.Spotify(auth_manager=client_credentials_manager)
 
 
 @st.cache_data
