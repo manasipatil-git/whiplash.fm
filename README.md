@@ -55,6 +55,7 @@ This app does not collect or store any user data
 
 It simply uses your Spotify session to fetch mood-based playlists
 
+![image](https://github.com/user-attachments/assets/5c9f65d8-ae16-44ec-9f5e-14061b3aae88)
 
 
 
